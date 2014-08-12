@@ -18,9 +18,7 @@
   ],
   "author": "leg1o",
   "license": "OpenSource"
-}
-{
-	"engines": {
+  "engines": {
 		"node": "0.10.x"
 	}
 }
