@@ -4,7 +4,159 @@ var path = require('path');
 //var custom_module = require('./custom_module.js');
 var http = require('http');
 var net = require('net');
+var url = require('url');
 
+console.log("START");
+
+function toUnixTime(date)
+{
+	return date.getTime();
+};
+
+function parse(date)
+{
+	return 
+	{ 
+		"hour": date.getHours(), 
+		"minute": date.getMinutes(), 
+		"second": date.getSeconds()
+	};
+};
+
+http.createServer
+(
+	function(request, response)
+	{
+		var incomingURL = url.parse(request.url, true);
+		console.log("incomingURL: " + incomingURL);
+		var path = incomingURL.pathname;
+		console.log("path: " + path);
+		//console.log("incomingURL.query: " + incomingURL.query);
+		var date = new Date(incomingURL.query.iso);
+		console.log("date: " + date);
+		
+		if (path === "/api/unixtime")
+		{
+			response.writeHead(200, { "Content-Type": "application/json"});
+			response.end(JSON.stringify({ "unixtime": toUnixTime(date)}));
+		}
+		else if (path === "/api/parsetime")
+		{
+			response.writeHead(200, { "Content-Type": "application/json"});
+			response.end(JSON.stringify(parse(date)));
+		}
+		else
+		{
+			response.writeHead(404);
+			response.end("");
+		}
+	}
+).listen(process.argv[2]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+var server = http.createServer
+(
+	
+);
+
+server.on
+(
+	'request',
+	function (request, response)
+	{
+		if (request.method === "GET")
+		{
+			console.log("request.url: " + request.url);
+			var jsonObj = {};
+			var urlString = request.url;
+			var timeFormat = urlString.substring (urlString.indexOf('/') + 5, urlString.indexOf('?'));
+			urlString = urlString.substring (urlString.indexOf('T') + 1, urlString.indexOf('.'));
+			console.log("timeFormat: " + timeFormat);
+			if (timeFormat === "parsetime")
+			{
+				var timeArray = urlString.split (':');
+			
+				timeArray.forEach (function (time) {console.log("time: " + time);});
+				/*
+				var jsonString = 	"{" +
+								"\"hour\": "  		+ timeArray[0].toString() + "," +
+								"\"minute\": " 	+ timeArray[1].toString() + "," + 
+								"\"second\": " 	+ timeArray[2].toString() + 
+								"}";
+				*/
+/*				jsonObj = 
+				{
+					"hour": 	(parseInt(timeArray[0]) + 2),
+					"minute": 	parseInt(timeArray[1]),
+					"second": 	parseInt(timeArray[2])
+				};
+			}
+			else if (timeFormat === "unixtime")
+			{
+				/*
+				urlString = urlString.substring (urlString.indexOf('T') + 1, urlString.indexOf('.'));
+				var timeArray = urlString.split (':');
+			
+				timeArray.forEach (function (time) {console.log("time: " + time);});
+				/*
+				var jsonString = 	"{" +
+								"\"hour\": "  		+ timeArray[0].toString() + "," +
+								"\"minute\": " 	+ timeArray[1].toString() + "," + 
+								"\"second\": " 	+ timeArray[2].toString() + 
+								"}";
+				*/
+				
+				//urlString = urlString. ()
+/*				var unixDate = Date.parse(urlString)
+				console.log("unixDate: " + unixDate.toLocaleString());
+				//Date.parse(urlString);
+				
+				jsonObj = 
+				{
+					"unixtime": unixDate
+				};
+				
+				
+			}
+			
+			var jsonString = JSON.stringify(jsonObj);
+			//var jsonObject = JSON.parse(jsonString);
+			console.log("jsonString: " + jsonString);
+			
+			response.writeHead (200, { 'Content-Type': 'application/JSON'});
+			response.write(jsonString);
+			response.end();
+		}
+		/*
+		request.on
+		(
+			'data',
+			function (data)
+			{
+				
+			}
+		);
+		*/
+/*	}
+);
+
+server.listen(process.argv[2]);
+console.log("END");
+*/
+
+/*
 console.log("START");
 var server = http.createServer
 (
@@ -21,7 +173,7 @@ var server = http.createServer
 		}
 		console.log("createServer() callback END");
 		*/
-	
+/*	
 );
 
 server.listen(process.argv[2]);
@@ -33,6 +185,7 @@ server.on
 		console.log("request received");
 		console.log("request.headers: " + request.headers);
 		console.log("request.method: " + request.method);
+		var stringTemp = "";
 		if(request.method === "POST")
 		{
 			console.log("request: " + request);
@@ -44,7 +197,11 @@ server.on
 			'data', 
 			function (data)
 			{
-				console.log("data: " + data);
+				if(request.method === "POST")
+				{
+					stringTemp += data;
+					console.log("data: " + data);
+				}
 			}
 		);
 		request.on
@@ -52,7 +209,10 @@ server.on
 			'end', 
 			function ()
 			{
-				server.close();
+				console.log("onEnd");
+				//server.close();
+				stringTemp = stringTemp.toUpperCase();
+				response.end(stringTemp);
 			}
 		);
 		
@@ -61,7 +221,7 @@ server.on
 );
 console.log("END");
 //setTimeout(function (){}, 5000);
-
+*/
 /*
 var server = http.createServer (
 	function (request, response)
